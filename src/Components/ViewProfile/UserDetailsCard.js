@@ -1,16 +1,21 @@
+import React, { useContext, useState } from "react";
 import {
   Avatar,
   Badge,
+  Button,
   Card,
   Grid,
   makeStyles,
   Typography,
   withStyles,
 } from "@material-ui/core";
-import React, { useState } from "react";
 import user from "../../assets/user.png";
 import EditIcon from "@material-ui/icons/Edit";
 import EditProfileDialog from "../ProfilePage/EditProfileDialog";
+import { UserContext } from "../../Context/UserContext";
+import { useConnections } from "../../Context/ConnectionProvider";
+import { kBaseUrl } from "../../constants";
+import { useToast } from "../../Context/ToastProvider";
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
@@ -27,8 +32,10 @@ const StyledBadge = withStyles((theme) => ({
 const useStyles = makeStyles((theme) => ({
   card: {
     padding: "15px 20px 15px 20px",
-    position: "fixed",
-    width: "22%",
+    [theme.breakpoints.up("sm")]: {
+      position: "fixed",
+      width: "22%",
+    },
   },
   avatar: {
     width: 90,
@@ -41,20 +48,142 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.5rem",
     fontWeight: "bold",
     paddingBottom: 0,
+    color: theme.palette.primary.main,
   },
   college: {
     fontSize: "1.1rem",
     fontWeight: 500,
     textAlign: "center",
   },
+  text: {
+    paddingBottom: 0,
+    textAlign: "center",
+  },
+  // btn: {
+
+  // },
 }));
 
-function UserDetailsCard() {
+function UserDetailsCard({ self, data }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const { userProfile } = useContext(UserContext);
+  self && (data = userProfile);
+  const {
+    connections,
+    invites,
+    suggestions,
+    setConnections,
+    setInvites,
+    setSuggestions,
+  } = useConnections();
+  const connect = connections && connections.find((connection) => connection.uid === data.uid);
+  const invitation = invites && invites.find((invite) => invite.uid === data.uid);
+  const suggestion = suggestions && suggestions.find((suggs) => suggs.uid === data.uid);
+  const { setToast, setMessage, setMessageType } = useToast();
 
   const handleClickOpen = () => {
     setOpen(!open);
+  };
+
+  const handleAcceptConnection = () => {
+    fetch(kBaseUrl + "accept_connection", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        uid: data.uid,
+      }),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          setConnections([...connections, data]);
+          const inv = invites.filter((invite) => invite.uid !== data.uid);
+          setInvites(inv);
+          setToast(true);
+          setMessage(
+            data.fname + " " + data.lname + " is added to your connection"
+          );
+          setMessageType("info");
+        } else {
+          setToast(true);
+          setMessage("Something Went Wrong!");
+          setMessageType("error");
+        }
+      })
+      .catch(() => {
+        setToast(true);
+        setMessage("Something Went Wrong!");
+        setMessageType("error");
+      });
+  };
+
+  const handleRejectConnection = () => {
+    fetch(kBaseUrl + "reject_connection_request", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        uid: data.uid,
+      }),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          const inv = invites.filter((invite) => invite.uid !== data.uid);
+          setInvites(inv);
+          setToast(true);
+          setMessage(
+            "Request from " + data.fname + " " + data.lname + " is Rejected"
+          );
+          setMessageType("info");
+        } else {
+          setToast(true);
+          setMessage("Something Went Wrong!");
+          setMessageType("error");
+        }
+      })
+      .catch(() => {
+        setToast(true);
+        setMessage("Something Went Wrong!");
+        setMessageType("error");
+      });
+  };
+
+  const handleMakeConnection = () => {
+    fetch(kBaseUrl + "make_connection_request", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        uid: data.uid,
+      }),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          const sgs = suggestions.filter(
+            (suggestion) => suggestion.uid !== data.uid
+          );
+          setSuggestions(sgs);
+          setToast(true);
+          setMessage("Request Sent to " + data.fname + " " + data.lname);
+          setMessageType("info");
+        } else {
+          setToast(true);
+          setMessage("Something Went Wrong!");
+          setMessageType("error");
+        }
+      })
+      .catch(() => {
+        setToast(true);
+        setMessage("Something Went Wrong!");
+        setMessageType("error");
+      });
   };
 
   return (
@@ -67,40 +196,120 @@ function UserDetailsCard() {
         spacing={1}
       >
         <Grid item>
-          <StyledBadge
-            overlap="circle"
-            badgeContent={
-              <label onClick={handleClickOpen}>
-                <EditIcon fontSize="small" />
-              </label>
-            }
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "right",
-            }}
-          >
+          {self ? (
+            <StyledBadge
+              overlap="circle"
+              badgeContent={
+                <label onClick={handleClickOpen}>
+                  <EditIcon fontSize="small" />
+                </label>
+              }
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+            >
+              <Avatar
+                src={
+                  userProfile && userProfile.thumbnail_pic !== ""
+                    ? userProfile.thumbnail_pic
+                    : user
+                }
+                alt="User Profile"
+                aria-label="Name"
+                className={classes.avatar}
+              />
+            </StyledBadge>
+          ) : (
             <Avatar
-              src={user}
-              alt="DP"
+              src={
+                data && data.thumbnail_pic !== "" ? data.thumbnail_pic : user
+              }
+              alt="User Profile"
               aria-label="Name"
               className={classes.avatar}
             />
-          </StyledBadge>
+          )}
         </Grid>
         <Grid item>
-          <Typography className={classes.name}>Nisarg Chokshi</Typography>
+          <Typography className={classes.name}>
+            {data && data.fname + " " + data.lname}
+          </Typography>
+        </Grid>
+        {!self && invitation && invitation.uid === data.uid && (
+          <Grid
+            item
+            container
+            direction="row"
+            justify="space-between"
+            alignItems="center"
+          >
+            <Grid item xs={5}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.btn}
+                onClick={handleAcceptConnection}
+              >
+                Accept
+              </Button>
+            </Grid>
+            <Grid item xs={5}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="secondary"
+                className={classes.btn}
+                onClick={handleRejectConnection}
+              >
+                Reject
+              </Button>
+            </Grid>
+          </Grid>
+        )}
+        {!self && (
+          <Grid
+            item
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item xs={9}>
+              <Button
+                fullWidth
+                variant="contained"
+                color="secondary"
+                className={classes.btn}
+                onClick={
+                  suggestion &&
+                  suggestion.uid === data.uid &&
+                  handleMakeConnection
+                }
+                disabled={connect && connect.uid === data.uid}
+              >
+                {connect && connect.uid === data.uid
+                  ? `Connection`
+                  : suggestion && suggestion.uid === data.uid
+                    ? `Create Connection`
+                    : !self && `Requested`}
+              </Button>
+            </Grid>
+          </Grid>
+        )}
+
+        <Grid item>
+          <Typography className={classes.text}>{data && data.title}</Typography>
         </Grid>
         <Grid item>
-          <Typography style={{ paddingBottom: 0 }}>
-            Front-end Developer
+          <Typography className={classes.text}>
+            {data && data.branch + " Semester " + data.semester}
           </Typography>
         </Grid>
         <Grid item>
-          <Typography style={{ paddingBottom: 0 }}>IT Semester 7</Typography>
-        </Grid>
-        <Grid item>
           <Typography className={classes.college}>
-            Vishwakarma Government Enginnering College
+            {data && data.college}
           </Typography>
         </Grid>
       </Grid>

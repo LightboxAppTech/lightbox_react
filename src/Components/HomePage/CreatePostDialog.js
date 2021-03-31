@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -11,7 +11,13 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import Typography from "@material-ui/core/Typography";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import axios from "axios";
+// import axios from "axios";
+import { kBaseUrl } from "../../constants";
+import { ThemeContext } from "../../Context/ThemeContext";
+import useForm from "../../hooks/useForm";
+import validate from "../../validate/validateCreatePost";
+import { useToast } from "../../Context/ToastProvider";
+import { usePosts } from "../../Context/PostsProvider";
 
 const styles = (theme) => ({
   root: {
@@ -31,6 +37,37 @@ const styles = (theme) => ({
 });
 
 const useStyles = makeStyles((theme) => ({
+  textAreaDark: {
+    background: "transparent",
+    resize: "none",
+    color: "white",
+    border: "1px solid transparent",
+    width: "100%",
+    outlineColor: "transparent",
+    fontFamily: "roboto",
+    fontSize: "1.2rem",
+    "&::-webkit-scrollbar": {
+      width: "0.6rem",
+    },
+    "&::-webkit-scrollbar-track:hover": {
+      boxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+      webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+      background: "rgba(180,180,180,0.2)",
+      borderRadius: "8px",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      // backgroundColor: "rgba(0,0,0,.1)",
+      // outline: "1px solid slategrey",
+      // background: "#B4B4B4",
+      background: theme.palette.primary.main,
+      borderRadius: "8px",
+    },
+    "&::-webkit-scrollbar-thumb:hover": {
+      // background: "#A3A3A3",
+      background: theme.palette.text.secondary,
+      cursor: "pointer",
+    },
+  },
   textArea: {
     resize: "none",
     border: "1px solid transparent",
@@ -59,6 +96,10 @@ const useStyles = makeStyles((theme) => ({
       background: "#004A74",
       cursor: "pointer",
     },
+  },
+  btnDark: {
+    color: theme.palette.primary.main,
+    background: "#0496FF",
   },
   input: {
     display: "none",
@@ -103,7 +144,9 @@ const DialogTitle = withStyles(styles)((props) => {
   const { children, classes, onClose, ...other } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
+      <Typography variant="h6" color="primary">
+        {children}
+      </Typography>
       {onClose ? (
         <IconButton
           aria-label="close"
@@ -130,19 +173,95 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-const CreatePostDialog = ({ open, handleClickOpen }) => {
+const CreatePostDialog = ({ open, handleClickOpen, edit, postdata }) => {
   const [openWarning, setOpenWarning] = React.useState(false);
-  const [images, setImages] = React.useState([]);
+  const [images, setImages] = React.useState(edit ? postdata.post_image : []);
   const [fileData, setFileData] = React.useState([]);
-  const [description, setDescription] = React.useState("");
+  const [setTags] = React.useState([]);
   const classes = useStyles();
+  const { defaultTheme } = useContext(ThemeContext);
+  const { setToast, setMessage, setMessageType } = useToast();
+  const { posts, setPosts } = usePosts();
+
+  var hashtags = [];
+  const formatHashtags = (string) => {
+    string
+      // .split(/((?:^|\s)(?:#[a-z\d-]+))/gi)
+      // eslint-disable-next-line no-useless-escape
+      .split(/\B(\#[a-zA-Z]+\b)(?!;)/gi)
+      .filter(Boolean)
+      // eslint-disable-next-line array-callback-return
+      .map((v, i) => {
+        if (v.includes("#")) {
+          hashtags.push(v);
+        }
+      });
+    setTags(hashtags);
+  };
+
+  const data = {
+    description: edit ? postdata.description : "",
+  };
+
+  const errorData = {
+    description: "",
+  };
+
+  const submit = () => {
+    formatHashtags(values.description);
+    // console.log({
+    //   images: fileData,
+    //   description: values.description,
+    //   tags: hashtags,
+    // });
+
+    fetch(kBaseUrl + "post", {
+      credentials: "include",
+      // mode: "no-cors",
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        _id: edit && postdata._id,
+        images: fileData,
+        description: values.description,
+        tags: hashtags,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        let pst = posts.filter((pst) => pst._id === data._id);
+        const epst = posts.filter((pst) => pst._id !== data._id);
+        pst = data;
+        setPosts([pst, ...epst]);
+        setToast(true);
+        setMessage(
+          edit ? "Post Edited Successfully" : "Post Created Successfully"
+        );
+        setMessageType("success");
+        handleWarningDiscard();
+      })
+      .catch(() => {
+        setToast(true);
+        setMessage("Something Went Wrong! Please try again");
+        setMessageType("error");
+      });
+  };
+
+  const { handleChange, handleSubmit, values, errors } = useForm(
+    submit,
+    validate,
+    data,
+    errorData
+  );
 
   const handleWarningClickOpen = () => {
-    images && description ? setOpenWarning(true) : handleClickOpen();
+    images && values.description ? setOpenWarning(true) : handleClickOpen();
   };
 
   const handleClose = () => {
-    setDescription("");
+    values.description = "";
     setImages([]);
     handleClickOpen();
   };
@@ -153,14 +272,29 @@ const CreatePostDialog = ({ open, handleClickOpen }) => {
 
   const handleWarningDiscard = () => {
     setOpenWarning(false);
-    setDescription("");
-    setImages([]);
-    handleClickOpen();
+    handleClose();
   };
 
-  const handleDescription = (event) => {
-    setDescription(event.target.value);
-  };
+  // const handleDescription = (event) => {
+  //   setDescription(event.target.value);
+  // };
+
+  // var urlTobase64images = [];
+  // edit &&
+  //   images &&
+  //   images.map((image) => {
+  //     imageToBase64(image)
+  //       .then((response) => {
+  //         urlTobase64images.push(response);
+  //         console.log("in mapping");
+  //       })
+  //       .catch((e) => {
+  //         console.log(e);
+  //         console.log("in mapping");
+  //       });
+  //   });
+
+  // console.log(urlTobase64images);
 
   const displaySelectedImages = (event) => {
     const files = [...event.target.files];
@@ -191,7 +325,6 @@ const CreatePostDialog = ({ open, handleClickOpen }) => {
         url.type === "image/jpeg" ||
         url.type === "image/jpg"
       ) {
-        console.log(url.size);
         if (url.size >= 8388608) {
           sizeExceeded = true;
         }
@@ -202,18 +335,49 @@ const CreatePostDialog = ({ open, handleClickOpen }) => {
       }
     });
 
-    const formData = new FormData();
-    const form = files.map((file, index) => {
-      formData.append("post_images", file);
-      return formData;
+    var base64images = [];
+    // eslint-disable-next-line array-callback-return
+    files.map((file, index) => {
+      let reader = new FileReader();
+      reader.onload = function (e) {
+        // this.setState({uploadedImage: e.target.result});
+        // console.log(e.target.result);
+        base64images.push({ data: e.target.result, name: files[index].name });
+      };
+      reader.readAsDataURL(file);
     });
-    console.log("Form Data: ", form);
+
+    // console.log(base64images);
+
+    // fetch(urls[0])
+    //   .then(function (response) {
+    //     return response.blob();
+    //   })
+    //   .then(function (blob) {
+    //     var reader = new FileReader();
+    //     reader.readAsDataURL(blob);
+    //     console.log(reader.result);
+    //   });
+
+    // const reader = new FileReader();
+    // const print = reader.readAsDataURL(event.target.files[0]);
+    // console.log(print);
+    // const buffer = FS.readFileSync(urls[0]);
+    // console.log(urls);
+
+    // const formData = new FormData();
+    // const form = files.map((file, index) => {
+    //   formData.append("post_images", file);
+    //   return formData;
+    // });
+    // console.log("Form Data: ", form);
+
     flag && alert("Only Image Files are Supported !");
     sizeExceeded && alert("Please Select images smaller than 8 MB size!");
     if (!flag && !sizeExceeded) {
-      setImages(urls);
-      setFileData(form);
-      console.log(fileData);
+      setImages(edit ? [...images, ...urls] : urls);
+      setFileData(base64images);
+      // console.log(fileData);
     } else {
       setImages(null);
       setFileData(null);
@@ -271,19 +435,25 @@ const CreatePostDialog = ({ open, handleClickOpen }) => {
         onClose={handleWarningClickOpen}
         style={{ color: "black" }}
       >
-        Create A Post
+        {edit ? `Edit Post` : `Create A Post`}
       </DialogTitle>
       <DialogContent className={classes.dialog}>
         {WarningDialog}
         <TextareaAutosize
           rowsMin={15}
           rowsMax={15}
+          name="description"
           aria-label="maximum height"
           placeholder="Write Your Thoughts..."
-          value={description}
-          className={classes.textArea}
-          onChange={handleDescription}
+          value={values.description}
+          className={
+            defaultTheme === "dark" ? classes.textAreaDark : classes.textArea
+          }
+          onChange={handleChange}
         />
+        {errors.description && (
+          <Typography color="error">{errors.description}</Typography>
+        )}
         <input
           accept="image/png,image/gif,image/jpeg,image/jpg"
           className={classes.input}
@@ -296,30 +466,34 @@ const CreatePostDialog = ({ open, handleClickOpen }) => {
         {images &&
           images.map((image, index) => (
             <div key={index} className={classes.closeButtonDiv}>
-              <IconButton
-                className={classes.close}
-                aria-label="remove picture"
-                onClick={() => removeImage(index)}
-              >
-                <CancelIcon fontSize="large" />
-              </IconButton>
+              {!edit && (
+                <IconButton
+                  className={classes.close}
+                  aria-label="remove picture"
+                  onClick={() => removeImage(index)}
+                >
+                  <CancelIcon fontSize="large" />
+                </IconButton>
+              )}
               <img src={image} width="100%" alt="" />
             </div>
           ))}
       </DialogContent>
       <DialogActions className={classes.action}>
         <label htmlFor="icon-button-file">
-          <IconButton
-            color="primary"
-            aria-label="upload picture"
-            component="span"
-          >
-            <PhotoCamera />
-          </IconButton>
+          {!edit && (
+            <IconButton
+              color="primary"
+              aria-label="upload picture"
+              component="span"
+            >
+              <PhotoCamera />
+            </IconButton>
+          )}
         </label>
         <Button
           autoFocus
-          onClick={handleClose}
+          onClick={handleSubmit}
           variant="contained"
           color="primary"
         >
@@ -331,8 +505,3 @@ const CreatePostDialog = ({ open, handleClickOpen }) => {
 };
 
 export default CreatePostDialog;
-
-// const imgs = [...images];
-//     imgs.splice(index, 1);
-
-//     setImages(imgs);

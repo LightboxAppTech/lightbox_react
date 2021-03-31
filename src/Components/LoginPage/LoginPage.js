@@ -29,6 +29,11 @@ const LoginPage = (props) => {
 
   // const handleForgotPassword = () => {};
   let history = useHistory();
+
+  const handleForgotPassword = (e) => {
+    e.preventDefault();
+    history.push("/forgotpassword");
+  };
   return (
     <div className="login-page">
       <Grid
@@ -41,7 +46,7 @@ const LoginPage = (props) => {
         <Card className={classes.card}>
           <CardContent>
             <Grid item>
-              <Link to="/" style={{textDecoration:"none"}}>
+              <Link to="/" style={{ textDecoration: "none" }}>
                 <h1 className={classes.title}>Lightbox</h1>
               </Link>
             </Grid>
@@ -49,7 +54,9 @@ const LoginPage = (props) => {
               <LoginForm setLogin={props.setLogin} />
             </Grid>
             <Grid container justify="center">
-              <Button color="primary">Forgot Password?</Button>
+              <Button color="primary" onClick={handleForgotPassword}>
+                Forgot Password?
+              </Button>
             </Grid>
             <Grid container justify="center">
               <p>New to lightbox?</p>

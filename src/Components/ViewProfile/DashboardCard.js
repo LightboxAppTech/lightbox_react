@@ -9,6 +9,11 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1.5rem",
     fontWeight: "bold",
     padding: 8,
+    textAlign: "center",
+    [theme.breakpoints.down("md")]: {
+      padding: 3,
+      fontSize: "1.2rem",
+    },
   },
   count: {
     fontSize: "3rem",
@@ -16,21 +21,35 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     marginTop: 10,
     color: theme.palette.primary.main,
+    [theme.breakpoints.down("md")]: {
+      fontSize: "1.5rem",
+    },
   },
   itemheading: {
     fonstSize: "1.5rem",
     fontWeight: 600,
+    [theme.breakpoints.down("md")]: {
+      fontSize: "0.9rem",
+    },
+  },
+  divider: {
+    backgroundColor: "#5F5F5F",
   },
 }));
 
-function DashboardCard() {
+function DashboardCard({
+  connectionslength,
+  postslength,
+  blogslength,
+  projectslength,
+}) {
   const classes = useStyles();
   return (
     <Card className={classes.card}>
       <Grid container direction="column">
         <Grid item>
           <Typography className={classes.cardheading}>Dashboard</Typography>
-          <Divider />
+          <Divider className={classes.divider} />
         </Grid>
         <Grid
           container
@@ -38,7 +57,7 @@ function DashboardCard() {
           alignItems="center"
           justify="space-between"
         >
-          <Grid item>
+          <Grid item xs={4}>
             <Grid
               container
               direction="column"
@@ -46,16 +65,14 @@ function DashboardCard() {
               alignItems="center"
             >
               <Grid item>
-                <Typography className={classes.count}>05</Typography>
+                <Typography className={classes.count}>{postslength}</Typography>
               </Grid>
               <Grid item>
-                <Typography className={classes.itemheading}>
-                  Total Posts
-                </Typography>
+                <Typography className={classes.itemheading}>Posts</Typography>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item>
+          {/* <Grid item md={3} xs={6}>
             <Grid
               container
               direction="column"
@@ -63,7 +80,7 @@ function DashboardCard() {
               alignItems="center"
             >
               <Grid item>
-                <Typography className={classes.count}>03</Typography>
+                <Typography className={classes.count}>{blogslength}</Typography>
               </Grid>
               <Grid item>
                 <Typography className={classes.itemheading}>
@@ -71,8 +88,8 @@ function DashboardCard() {
                 </Typography>
               </Grid>
             </Grid>
-          </Grid>
-          <Grid item>
+          </Grid> */}
+          <Grid item xs={4}>
             <Grid
               container
               direction="column"
@@ -80,16 +97,18 @@ function DashboardCard() {
               alignItems="center"
             >
               <Grid item>
-                <Typography className={classes.count}>45</Typography>
+                <Typography className={classes.count}>
+                  {connectionslength}
+                </Typography>
               </Grid>
               <Grid item>
                 <Typography className={classes.itemheading}>
-                  Total connections
+                  Connections
                 </Typography>
               </Grid>
             </Grid>
           </Grid>
-          <Grid item>
+          <Grid item xs={4}>
             <Grid
               container
               direction="column"
@@ -97,11 +116,13 @@ function DashboardCard() {
               alignItems="center"
             >
               <Grid item>
-                <Typography className={classes.count}>03</Typography>
+                <Typography className={classes.count}>
+                  {projectslength}
+                </Typography>
               </Grid>
               <Grid item>
                 <Typography className={classes.itemheading}>
-                  Total Projects
+                  Projects
                 </Typography>
               </Grid>
             </Grid>

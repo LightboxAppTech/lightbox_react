@@ -2,7 +2,6 @@ import React from "react";
 import {
   Button,
   Dialog,
-  makeStyles,
   Typography,
   withStyles,
   IconButton,
@@ -11,7 +10,7 @@ import MuiDialogTitle from "@material-ui/core/DialogTitle";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 import MuiDialogActions from "@material-ui/core/DialogActions";
 import CloseIcon from "@material-ui/icons/Close";
-import EditProfileForm from "./EditProfileForm";
+import EditProfileFormValidate from "./EditProfileFormValidate";
 
 const styles = (theme) => ({
   root: {
@@ -26,25 +25,23 @@ const styles = (theme) => ({
   },
 });
 
-const useStyles = makeStyles((theme) => ({
-  action: {
-    // flexGrow: 1,
-  },
-}));
-
 const DialogTitle = withStyles(styles)((props) => {
-  const { children, classes, onClose, ...other } = props;
+  const { children, classes, required, onClose, ...other } = props;
   return (
     <MuiDialogTitle disableTypography className={classes.root} {...other}>
-      <Typography variant="h6">{children}</Typography>
-      {onClose ? (
-        <IconButton
-          aria-label="close"
-          className={classes.closeButton}
-          onClick={onClose}
-        >
-          <CloseIcon />
-        </IconButton>
+      <Typography color="primary" variant="h6">
+        {children}
+      </Typography>
+      {!required ? (
+        onClose ? (
+          <IconButton
+            aria-label="close"
+            className={classes.closeButton}
+            onClick={onClose}
+          >
+            <CloseIcon />
+          </IconButton>
+        ) : null
       ) : null}
     </MuiDialogTitle>
   );
@@ -80,8 +77,7 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-const EditProfileDialog = ({ open, handleClickOpen }) => {
-  const classes = useStyles();
+const EditProfileDialog = ({ open, handleClickOpen, required, setLogin }) => {
   const [openWarning, setOpenWarning] = React.useState(false);
 
   const handleWarningClickOpen = () => {
@@ -129,19 +125,28 @@ const EditProfileDialog = ({ open, handleClickOpen }) => {
     >
       <DialogTitle
         id="customized-dialog-title"
+        required={required}
         onClose={handleWarningClickOpen}
-        style={{ color: "black", textAlign: "center" }}
+        style={{ textAlign: "center" }}
       >
         Edit Profile
       </DialogTitle>
       <DialogContent>
         {WarningDialog}
-        <EditProfileForm />
+        <EditProfileFormValidate
+          handleClose={handleClickOpen}
+          required={required}
+          setLogin={setLogin}
+        />
       </DialogContent>
-      <DialogActions className={classes.action}>
+      <DialogActions>
         <Button
           autoFocus
-          onClick={handleClickOpen}
+          // onClick={() => {
+          //   editProfileFormRef.current.submitHandler();
+          // }}
+          form="update-profile"
+          type="submit"
           variant="contained"
           color="primary"
         >

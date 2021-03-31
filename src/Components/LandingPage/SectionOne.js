@@ -1,8 +1,15 @@
-import React from "react";
-import { makeStyles } from "@material-ui/styles";
-import { Container, Grid, Typography, Avatar } from "@material-ui/core";
+import React, { useContext } from "react";
+import {
+  Container,
+  Grid,
+  Typography,
+  Avatar,
+  makeStyles,
+} from "@material-ui/core";
 import group from "../../assets/section-1.jpg";
+import darkgroup from "../../assets/section-1-dark.jpg";
 import DisabledLandingButton from "./DisabledLandingButton";
+import { ThemeContext } from "../../Context/ThemeContext";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
 
 const SectionOne = () => {
   const classes = useStyles();
+  const { defaultTheme } = useContext(ThemeContext);
 
   return (
     <div className={classes.root}>
@@ -34,7 +42,7 @@ const SectionOne = () => {
         <Grid container alignItems="center">
           <Grid item xs={12} sm={6}>
             <Typography variant="h6" className={classes.heading}>
-              Are you ready to kick start your professional journey in College ?{" "}
+              Are you ready to kick start your professional journey in College?
             </Typography>
             <Grid container spacing={3}>
               <Grid item xs={12}>
@@ -48,15 +56,18 @@ const SectionOne = () => {
               </Grid>
               <Grid item xs={12}>
                 <DisabledLandingButton
-                  text="Join a Group of Learners"
+                  text="Join Group of Learners"
                   align="left"
                 />
               </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12} sm={6}>
-            {/* <img src={group} alt="Group Image" /> */}
-            <Avatar className={classes.avatar} src={group} alt="Group Image" />
+            <Avatar
+              className={classes.avatar}
+              src={defaultTheme === "dark" ? darkgroup : group}
+              alt="Group Image"
+            />
           </Grid>
         </Grid>
       </Container>

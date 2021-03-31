@@ -3,7 +3,44 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import App from "./App";
 import * as serviceWorker from "./serviceWorker";
-ReactDOM.render(<App />, document.getElementById("root"));
+import UserContextProvider from "./Context/UserContextProvider";
+import ThemeContextProvider from "./Context/ThemeContextProvider";
+import { SocketProvider } from "./Context/SocketProvider";
+import { ConnectionProvider } from "./Context/ConnectionProvider";
+import { NotificationProvider } from "./Context/NotificationProvider";
+import { ProjectRequestProvider } from "./Context/ProjectRequestProvider";
+import { ProjectsProvider } from "./Context/ProjectsProvider";
+import { PostsProvider } from "./Context/PostsProvider";
+import { ToastProvider } from "./Context/ToastProvider";
+import { MyProjectsProvider } from "./Context/MyProjectsProvider";
+import { ChatsProvider } from "./Context/ChatsProvider";
+
+ReactDOM.render(
+  <SocketProvider>
+    <PostsProvider>
+      <ToastProvider>
+        <ProjectsProvider>
+          <NotificationProvider>
+            <ProjectRequestProvider>
+              <ConnectionProvider>
+                <ThemeContextProvider>
+                  <UserContextProvider>
+                    <MyProjectsProvider>
+                      <ChatsProvider>
+                        <App />{" "}
+                      </ChatsProvider>
+                    </MyProjectsProvider>
+                  </UserContextProvider>
+                </ThemeContextProvider>
+              </ConnectionProvider>
+            </ProjectRequestProvider>
+          </NotificationProvider>
+        </ProjectsProvider>
+      </ToastProvider>
+    </PostsProvider>
+  </SocketProvider>,
+  document.getElementById("root")
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
