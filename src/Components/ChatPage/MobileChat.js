@@ -6,7 +6,6 @@ import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import { useMyProjects } from '../../Context/MyProjectsProvider';
 import ChatBox from './ChatBox';
-import { useSocket } from '../../Context/SocketProvider';
 import { Badge, Grid } from '@material-ui/core';
 
 const Accordion = withStyles({
@@ -56,16 +55,16 @@ function MobileChat({ chats, setChats }) {
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
-  const socket = useSocket();
+  // const socket = useSocket();
   const [count, setCount] = React.useState({});
-  var room;
+  // var room;
 
-  socket.on("recieveMessage", (data) => {
-    let dt = { ...count };
-    dt[`${data.room}`] = dt[`${data.room}`] === undefined ? 1 : dt[`${data.room}`] + 1;
-    setCount(dt);
-    room = data.room;
-  });
+  // socket.on("recieveMessage", (data) => {
+  //   let dt = { ...count };
+  //   dt[`${data.room}`] = dt[`${data.room}`] === undefined ? 1 : dt[`${data.room}`] + 1;
+  //   setCount(dt);
+  //   room = data.room;
+  // });
 
   const handleGetMessages = (id) => {
     let dt = { ...count };

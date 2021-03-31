@@ -57,11 +57,11 @@ function PostMenu({ post }) {
   const connect = connections && connections.find(
     (connection) => connection.uid === post.owner_id
   );
-  const [connected, setConnected] = React.useState(
+  const [connected] = React.useState(
     connect && connect.uid === post.owner_id
   );
 
-  const [sent, setSent] = React.useState(false);
+  const [setSent] = React.useState(false);
 
   const handleClick = (event) => {
     event.stopPropagation();

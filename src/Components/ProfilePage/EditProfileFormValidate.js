@@ -23,7 +23,7 @@ import { ThemeContext } from "../../Context/ThemeContext";
 // import user from "../../assets/user.png";
 // import { useHistory } from "react-router-dom";
 // import { Socket } from "socket.io-client";
-import { useSocket } from "../../Context/SocketProvider";
+// import { useSocket } from "../../Context/SocketProvider";
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
@@ -242,7 +242,6 @@ const EditProfileFormValidate = ({ handleClose }) => {
   const [setFileData] = useState(null);
   const { defaultTheme } = useContext(ThemeContext);
   // const history = useHistory();
-  const socket = useSocket();
 
   const data = {
     fname: userProfile ? userProfile.fname : "",
@@ -349,6 +348,7 @@ const EditProfileFormValidate = ({ handleClose }) => {
   const multiselectHandle = (selected) => {
     var value = [];
     if (selected) {
+      // eslint-disable-next-line array-callback-return
       selected.map((select) => {
         value.push(select.value);
       });

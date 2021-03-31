@@ -315,6 +315,7 @@ const CompleteProfile = ({ setLogin }) => {
   const multiselectHandle = (selected) => {
     var value = [];
     if (selected) {
+      // eslint-disable-next-line array-callback-return
       selected.map((select) => {
         value.push(select.value);
       });

@@ -23,7 +23,7 @@ function PageNotFoundPage() {
       style={{ minHeight: "100vh" }}
     >
       <Grid item>
-        <img src={defaultTheme == "dark" ? dark : light} />
+        <img src={defaultTheme === "dark" ? dark : light} alt="404" />
       </Grid>
       <Grid item>
         <Typography variant="h3">Page Not Found</Typography>

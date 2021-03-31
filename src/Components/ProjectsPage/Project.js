@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Badge,
   Button,
   Card,
   CardActions,
@@ -15,7 +14,6 @@ import {
   Paper,
   Typography,
   useMediaQuery,
-  withStyles,
 } from "@material-ui/core";
 import clsx from "clsx";
 import React, { useContext } from "react";
@@ -39,34 +37,34 @@ import { useHistory } from "react-router";
 import ProjectMenu from "./ProjectMenu";
 import { useToast } from "../../Context/ToastProvider";
 
-const StyledBadge = withStyles((theme) => ({
-  badge: {
-    backgroundColor: "#44b700",
-    color: "#44b700",
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    "&::after": {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      borderRadius: "50%",
-      animation: "$ripple 1.2s infinite ease-in-out",
-      border: "1px solid currentColor",
-      content: '""',
-    },
-  },
-  "@keyframes ripple": {
-    "0%": {
-      transform: "scale(.8)",
-      opacity: 1,
-    },
-    "100%": {
-      transform: "scale(2.4)",
-      opacity: 0,
-    },
-  },
-}))(Badge);
+// const StyledBadge = withStyles((theme) => ({
+//   badge: {
+//     backgroundColor: "#44b700",
+//     color: "#44b700",
+//     boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+//     "&::after": {
+//       position: "absolute",
+//       top: 0,
+//       left: 0,
+//       width: "100%",
+//       height: "100%",
+//       borderRadius: "50%",
+//       animation: "$ripple 1.2s infinite ease-in-out",
+//       border: "1px solid currentColor",
+//       content: '""',
+//     },
+//   },
+//   "@keyframes ripple": {
+//     "0%": {
+//       transform: "scale(.8)",
+//       opacity: 1,
+//     },
+//     "100%": {
+//       transform: "scale(2.4)",
+//       opacity: 0,
+//     },
+//   },
+// }))(Badge);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -170,7 +168,7 @@ function Project({ project, single }) {
   const [requested, setrequested] = React.useState(checkRequested > -1);
   const checkMember =
     project && project.project_members.indexOf(userProfile.uid);
-  const [member, setMember] = React.useState(checkMember > -1);
+  const [member] = React.useState(checkMember > -1);
   const [copy, setCopy] = React.useState(false);
   const [commentText, setCommentText] = React.useState(false);
   const [comments, setComments] = React.useState([]);
@@ -505,7 +503,7 @@ function Project({ project, single }) {
               className={classes.btnspace}
               onClick={() => {
                 navigator.clipboard.writeText(
-                  "www.localhost:3001/projects/" + project._id
+                  "http://lightboxapp.tech/projects/" + project._id
                 );
                 setCopy(true);
                 setTimeout(() => {

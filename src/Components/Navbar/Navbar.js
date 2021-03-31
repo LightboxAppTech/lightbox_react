@@ -10,7 +10,6 @@ import {
   useMediaQuery,
   Grid,
   Box,
-  Switch,
   InputBase,
   Paper,
   Tooltip,
@@ -20,7 +19,7 @@ import NotificationDrawer from "../Notifications/NotificationDrawer";
 import { kBaseUrl } from "../../constants";
 import SearchIcon from "@material-ui/icons/Search";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import { useHistory, useParams, withRouter } from "react-router-dom";
+import { useHistory, withRouter } from "react-router-dom";
 import NavigationMenu from "./NavigationMenu";
 import CreateMenu from "./CreateMenu";
 import ProfileMenu from "./ProfileMenu";
@@ -154,7 +153,7 @@ const Navbar = (props) => {
     messageType,
     setMessageType,
   } = useToast();
-  const { myprojects, setMyProjects } = useMyProjects();
+  const { setMyProjects } = useMyProjects();
   const { count, setCount, chats, setChats } = useChats();
 
   const [mobileSearch, setMobileSearch] = useState(false);
@@ -165,6 +164,7 @@ const Navbar = (props) => {
       notifications.filter((notification) => notification.is_unread !== false);
 
     setNotifCount(unreadNotifs.length);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notifications]);
 
   const id = openNotif ? "simple-popover" : undefined;
@@ -219,6 +219,7 @@ const Navbar = (props) => {
 
   useEffect(() => {
     socket.emit("auth", { uid: userProfile.uid });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -230,12 +231,14 @@ const Navbar = (props) => {
       .then((data) => {
         if (data.message !== "Unauthenticated") setMyProjects(data);
         var projectRooms = [];
+        // eslint-disable-next-line array-callback-return
         data.map(({ _id }) => {
           projectRooms.push(_id);
         });
         socket.emit("joinRoom", { uid: userProfile.uid, projectRooms });
       })
       .catch((e) => console.log(e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   socket.on("connectionAcceptedNotification", (data) => {

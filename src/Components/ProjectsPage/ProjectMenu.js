@@ -9,7 +9,6 @@ import {
   Typography,
 } from "@material-ui/core";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
-import CreatePostDialog from "../HomePage/CreatePostDialog";
 import { ThemeContext } from "../../Context/ThemeContext";
 import StartProjectDialog from "../Project/StartProjectDialog";
 import EditIcon from "@material-ui/icons/Edit";
@@ -43,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
 
 function ProjectMenu({ project }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [open, setOpen] = React.useState(false);
   const [openProject, setOpenProject] = React.useState(false);
   const classes = useStyles();
   const { defaultTheme } = useContext(ThemeContext);
@@ -61,10 +59,10 @@ function ProjectMenu({ project }) {
   const connect = connections && connections.find(
     (connection) => connection.uid === project.project_leader
   );
-  const [connected, setConnected] = React.useState(
+  const [connected] = React.useState(
     connect && connect.uid === project.project_leader
   );
-  const [sent, setSent] = React.useState(false);
+  const [setSent] = React.useState(false);
 
   const handleClick = (event) => {
     event.stopPropagation();
@@ -76,10 +74,10 @@ function ProjectMenu({ project }) {
     setAnchorEl(null);
   };
 
-  const handleClickOpen = () => {
-    setAnchorEl(null);
-    setOpen(!open);
-  };
+  // const handleClickOpen = () => {
+  //   setAnchorEl(null);
+  //   setOpen(!open);
+  // };
 
   const handleCompleteProject = () => {
     fetch(kBaseUrl + "complete_project", {

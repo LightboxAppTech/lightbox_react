@@ -31,6 +31,7 @@ function PendingInvitesPage() {
       .then(() => setloading(false))
       .catch((e) => console.log(e));
     // setResult(invites);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSearch = (search) => {

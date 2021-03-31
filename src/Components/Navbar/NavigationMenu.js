@@ -1,5 +1,5 @@
-import { fade, Grid, makeStyles, Tooltip, useMediaQuery } from "@material-ui/core";
-import { Chat, Group, Home, PostAdd, Search } from "@material-ui/icons";
+import { fade, Grid, makeStyles, Tooltip } from "@material-ui/core";
+import { Chat, Group, Home, PostAdd } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 
@@ -58,8 +58,8 @@ export default function App() {
   const classes = useStyles();
   const [value, setValue] = useState(0);
   const history = useHistory();
-  const matches = useMediaQuery((theme) => theme.breakpoints.up("sm"));
-
+  // const matches = useMediaQuery((theme) => theme.breakpoints.up("sm"));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // history.listen((location, action) => {
     // let pathName = location.pathname;
@@ -84,6 +84,7 @@ export default function App() {
 
     setValue(index);
     // });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   });
 
   // history.listen((location, action) => {

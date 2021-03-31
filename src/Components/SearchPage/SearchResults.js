@@ -1,11 +1,7 @@
-import React, { useState } from "react";
-import PageHeading from "../PageHeading/PageHeading";
-import SearchIcon from "@material-ui/icons/Search";
+import React from "react";
 import { Box, Grid, makeStyles, Typography } from "@material-ui/core";
-import userPhoto from "../../assets/user.png";
 import Project from "../ProjectsPage/Project";
 import Post from "../HomePage/Post";
-import Connection from "../ConnectionPage/Connection";
 import MyConnections from "../ConnectionPage/MyConnections";
 
 const useStyle = makeStyles((theme) => ({

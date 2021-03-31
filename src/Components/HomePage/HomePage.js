@@ -43,30 +43,14 @@ const HomePage = () => {
           setPagecount(pagecount + 1);
         })
         .catch((e) => console.log(e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [end]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [end]);
-
-  const fetchPosts = (posts) => {
-    // fetch(kBaseUrl + "dashboard?page=" + (pagecount + 1), {
-    //   credentials: "include",
-    //   method: "GET",
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     // const prevdata = [...posts];
-    //     // prevdata = [...prevdata, ...data];
-    //     console.log("prevdata: ");
-    //     console.log(posts);
-    //     // setPosts(prevdata);
-    //     // setLoading(false);
-    //     setPagecount(pagecount + 1);
-    //   })
-    //   .catch((e) => console.log(e));
-  };
 
   // console.log("Inner height : ", window.innerHeight);
   // console.log("Scroll Top:", document.documentElement.scrollTop);

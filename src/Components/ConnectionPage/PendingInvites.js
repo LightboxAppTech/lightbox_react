@@ -40,6 +40,8 @@ function PendingInvites() {
     history.push("/allinvites");
   };
 
+  const invitations = invites && invites.length !== 0 ? invites.slice(0, 2) : [];
+
   useEffect(() => {
     fetch(kBaseUrl + "request_received", {
       credentials: "include",
@@ -49,9 +51,8 @@ function PendingInvites() {
       .then((data) => setInvites(data.slice(0, 2)))
       .then(() => setloading(false))
       .catch((e) => console.log(e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const invitations = invites && invites.length !== 0 ? invites.slice(0, 2) : [];
 
   return (
     <Card className={classes.card}>

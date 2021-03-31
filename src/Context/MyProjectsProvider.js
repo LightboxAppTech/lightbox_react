@@ -1,7 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import { kBaseUrl } from "../constants";
-import { useSocket } from "./SocketProvider";
-import { UserContext } from "./UserContext";
+import React, { useContext, useState } from "react";
 
 const MyProjectsContext = React.createContext();
 
@@ -11,8 +8,6 @@ export function useMyProjects() {
 
 export function MyProjectsProvider({ children }) {
   const [myprojects, setMyProjects] = useState([]);
-  const socket = useSocket();
-  const { userProfile } = useContext(UserContext);
 
   return (
     <MyProjectsContext.Provider

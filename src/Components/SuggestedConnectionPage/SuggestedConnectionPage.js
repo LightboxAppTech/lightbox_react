@@ -30,6 +30,7 @@ function SuggestedConnectionPage() {
       })
       .then(() => setloading(false))
       .catch((e) => console.log(e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSearch = (search) => {

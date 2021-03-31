@@ -8,7 +8,6 @@ import {
   Typography,
   useMediaQuery,
 } from "@material-ui/core";
-import LandingHeader from "./LandingHeader";
 import Footer from "./Footer";
 import DeveloperCard from "./DeveloperCard";
 import parth from "../../assets/parth.jpg";

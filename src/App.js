@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { ThemeProvider, CssBaseline } from "@material-ui/core";
 import {
   BrowserRouter as Router,
@@ -32,15 +32,12 @@ import Careers from "./Components/LandingPage/Careers";
 import Developers from "./Components/LandingPage/Developers";
 import Terms from "./Components/LandingPage/Terms";
 import ProjectsPage from "./Components/ProjectsPage/ProjectsPage";
-import { useSocket } from "./Context/SocketProvider";
-import { ConnectionProvider } from "./Context/ConnectionProvider";
 import ViewUserProfile from "./Components/ViewProfile/ViewUserProfile";
 import CompleteProfile from "./Components/RegisterPage/CompleteProfile";
 import ViewPost from "./Components/HomePage/ViewPost";
 import MyProjects from "./Components/MyProjects/MyProjects";
 import SearchResultPage from "./Components/SearchPage/SearchResultPage";
 import ViewProject from "./Components/ProjectsPage/ViewProject";
-import { SnackbarProvider } from "notistack";
 import PageNotFoundPage from "./Components/PageNotFoundPage/PageNotFoundPage";
 
 function App() {
@@ -65,22 +62,22 @@ function App() {
     document.onkeydown = function (e) {
 
       // disable F12 key
-      if (e.keyCode == 123) {
+      if (e.keyCode === 123) {
         return false;
       }
 
       // disable I key
-      if (e.ctrlKey && e.shiftKey && e.keyCode == 73) {
+      if (e.ctrlKey && e.shiftKey && e.keyCode === 73) {
         return false;
       }
 
       // disable J key
-      if (e.ctrlKey && e.shiftKey && e.keyCode == 74) {
+      if (e.ctrlKey && e.shiftKey && e.keyCode === 74) {
         return false;
       }
 
       // disable U key
-      if (e.ctrlKey && e.keyCode == 85) {
+      if (e.ctrlKey && e.keyCode === 85) {
         return false;
       }
     };
@@ -102,7 +99,7 @@ function App() {
       method: "GET",
     })
       .then(async (res) => {
-        if (res.status == 200) {
+        if (res.status === 200) {
           const data = await res.json();
           if (!data.isProfileCompleted) {
             history.replace("/completeprofile");
@@ -135,6 +132,7 @@ function App() {
         console.log(e);
         setLoading(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const setLogin = () => {

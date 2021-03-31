@@ -16,10 +16,8 @@ import { kBaseUrl } from "../../constants";
 import { ThemeContext } from "../../Context/ThemeContext";
 import useForm from "../../hooks/useForm";
 import validate from "../../validate/validateCreatePost";
-import SnackBar from "../SnackBar";
 import { useToast } from "../../Context/ToastProvider";
 import { usePosts } from "../../Context/PostsProvider";
-import imageToBase64 from "image-to-base64";
 
 const styles = (theme) => ({
   root: {
@@ -179,8 +177,7 @@ const CreatePostDialog = ({ open, handleClickOpen, edit, postdata }) => {
   const [openWarning, setOpenWarning] = React.useState(false);
   const [images, setImages] = React.useState(edit ? postdata.post_image : []);
   const [fileData, setFileData] = React.useState([]);
-  const [description, setDescription] = React.useState("");
-  const [tags, setTags] = React.useState([]);
+  const [setTags] = React.useState([]);
   const classes = useStyles();
   const { defaultTheme } = useContext(ThemeContext);
   const { setToast, setMessage, setMessageType } = useToast();
@@ -190,8 +187,10 @@ const CreatePostDialog = ({ open, handleClickOpen, edit, postdata }) => {
   const formatHashtags = (string) => {
     string
       // .split(/((?:^|\s)(?:#[a-z\d-]+))/gi)
+      // eslint-disable-next-line no-useless-escape
       .split(/\B(\#[a-zA-Z]+\b)(?!;)/gi)
       .filter(Boolean)
+      // eslint-disable-next-line array-callback-return
       .map((v, i) => {
         if (v.includes("#")) {
           hashtags.push(v);
@@ -337,6 +336,7 @@ const CreatePostDialog = ({ open, handleClickOpen, edit, postdata }) => {
     });
 
     var base64images = [];
+    // eslint-disable-next-line array-callback-return
     files.map((file, index) => {
       let reader = new FileReader();
       reader.onload = function (e) {

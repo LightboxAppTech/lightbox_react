@@ -16,8 +16,7 @@ export function ChatsProvider({ children }) {
         fetch(kBaseUrl + "get_all_chat_messages", {
             credentials: "include",
             method: "GET",
-        }).then(res => res.json()).
-            then(data => { setChats(data); })
+        }).then(res => res.json()).then(data => { setChats(data); })
             .catch(e => console.log(e));
     }, []);
 

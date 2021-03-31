@@ -1,27 +1,9 @@
-import { Grid, GridList, GridListTile, makeStyles, Typography, Avatar, Card, fade } from '@material-ui/core';
+import { Grid, makeStyles, Typography, Avatar, Card, fade } from '@material-ui/core';
 import React from 'react';
 import { useHistory } from 'react-router';
-import user from "../../assets/user.png";
 import { useConnections } from '../../Context/ConnectionProvider';
 
 const useStyles = makeStyles((theme) => ({
-    // card: {
-    //     background: theme.palette.background.default,
-    //     height: 120,
-    // },
-    // gridList: {
-    //     flexWrap: 'nowrap',
-    //     // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
-    //     transform: 'translateZ(0)',
-    //     height: 120
-    // },
-    // root: {
-    //     display: 'flex',
-    //     flexWrap: 'wrap',
-    //     justifyContent: 'space-around',
-    //     overflow: 'hidden',
-    //     backgroundColor: theme.palette.background.paper,
-    // }
     gridList: {
         flexWrap: "nowrap",
         overflowX: "auto",

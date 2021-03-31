@@ -1,6 +1,5 @@
 import { Badge, Card, fade, Grid, makeStyles, Typography } from "@material-ui/core";
 import React, { useContext, useState } from "react";
-import { useSocket } from "../../Context/SocketProvider";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { useChats } from "../../Context/ChatsProvider";
 
@@ -53,7 +52,7 @@ function GroupCard({ data, setId, setTitle, activeId }) {
   const classes = useStyles();
   const { defaultTheme } = useContext(ThemeContext);
   const [active, setActive] = useState(false);
-  const socket = useSocket();
+  // const socket = useSocket();
   const { count, setCount } = useChats();
 
   const handleGetMessages = () => {

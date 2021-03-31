@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, useMediaQuery } from "@material-ui/core";
+import { Box, Grid, useMediaQuery } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
 import QuickAccessCard from "../QuickAccess/QuickAccessCard";
 import UserDetailsCard from "./UserDetailsCard";

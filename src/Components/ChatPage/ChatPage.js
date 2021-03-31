@@ -1,6 +1,5 @@
 import { Box, Grid, Typography, useMediaQuery } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import { kBaseUrl } from "../../constants";
+import React, { useState } from "react";
 import { useChats } from "../../Context/ChatsProvider";
 import QuickAccessCard from "../QuickAccess/QuickAccessCard";
 import ChatBox from "./ChatBox";

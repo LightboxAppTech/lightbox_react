@@ -34,6 +34,7 @@ const ConnectionPage = () => {
       .then(() => setloading(false))
       .catch((e) => console.log(e));
     // setResult(connections);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageType]);
 
   const handleSearch = (search) => {

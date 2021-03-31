@@ -9,7 +9,7 @@ import {
 import React, { useContext, useEffect, useRef } from "react";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { UserContext } from "../../Context/UserContext";
-import { formatAMPM, getDate } from "../../utility";
+import { formatAMPM } from "../../utility";
 import chatimage from "../../assets/chat.png";
 import chatimagedark from "../../assets/chatdark.png";
 
@@ -172,7 +172,7 @@ function ChatArea({ chats }) {
               >
                 Send A Message to start Conversation.
                 </Typography>
-              <img src={defaultTheme === "dark" ? chatimagedark : chatimage} className={classes.chatimage} alt="Chat Image" />
+              <img src={defaultTheme === "dark" ? chatimagedark : chatimage} className={classes.chatimage} alt="Chat" />
             </Grid>
           )}
           <div ref={bottomRef}></div>

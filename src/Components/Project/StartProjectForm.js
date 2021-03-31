@@ -9,12 +9,11 @@ import {
   fade,
   Typography,
   FormControl,
-  FormLabel,
   RadioGroup,
   FormControlLabel,
   Radio,
 } from "@material-ui/core";
-import { generalSkillSet, branchList, kBaseUrl } from "../../constants";
+import { generalSkillSet, kBaseUrl } from "../../constants";
 import useForm from "../../hooks/useForm";
 import validate from "../../validate/validateStartProject";
 import { ThemeContext } from "../../Context/ThemeContext";
@@ -297,12 +296,14 @@ const StartProjectForm = ({ handleWarningDiscard, edit, projectdata }) => {
         })
         .then(() => setloading(false))
         .catch((e) => console.log(e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   var defaultConnections = [];
   var tms = [];
   edit &&
     members &&
+    // eslint-disable-next-line array-callback-return
     members.map((member) => {
       defaultConnections.push({
         label: member.fname + " " + member.lname + " (" + member.email + ") ",
@@ -395,6 +396,7 @@ const StartProjectForm = ({ handleWarningDiscard, edit, projectdata }) => {
   const multiselectHandle = (selected) => {
     var value = [];
     if (selected) {
+      // eslint-disable-next-line array-callback-return
       selected.map((select) => {
         value.push(select.value);
       });
@@ -408,6 +410,7 @@ const StartProjectForm = ({ handleWarningDiscard, edit, projectdata }) => {
   const technologySelectHandle = (selected) => {
     var value = [];
     if (selected) {
+      // eslint-disable-next-line array-callback-return
       selected.map((select) => {
         value.push(select.value);
       });
@@ -421,6 +424,7 @@ const StartProjectForm = ({ handleWarningDiscard, edit, projectdata }) => {
   const requirementSelectHandle = (selected) => {
     var value = [];
     if (selected) {
+      // eslint-disable-next-line array-callback-return
       selected.map((select) => {
         value.push(select.value);
       });

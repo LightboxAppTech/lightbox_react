@@ -9,13 +9,11 @@ import {
   InputBase,
   makeStyles,
   Paper,
-  Typography,
   useMediaQuery,
 } from "@material-ui/core";
 import { Send } from "@material-ui/icons";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { MoonLoader } from "react-spinners";
-import { kBaseUrl } from "../../constants";
 import { useSocket } from "../../Context/SocketProvider";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { UserContext } from "../../Context/UserContext";
@@ -137,7 +135,7 @@ function ChatBox({ id, title, chats, setChats }) {
   const socket = useSocket();
   const { userProfile } = useContext(UserContext);
   // const [chats, setChats] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading] = useState(false);
   const { defaultTheme } = useContext(ThemeContext);
   const matches = useMediaQuery((theme) => theme.breakpoints.up("sm"));
   // useEffect(() => {
@@ -179,11 +177,11 @@ function ChatBox({ id, title, chats, setChats }) {
     setMessageText("");
   };
 
-  socket.on("recieveMessage", (data) => {
-    let cts = { ...chats };
-    cts[data.room] = cts[data.room] && (cts[data.room].length !== 0 ? [...cts[data.room], data] : [data]);
-    setChats(cts);
-  });
+  // socket.on("recieveMessage", (data) => {
+  //   let cts = { ...chats };
+  //   cts[data.room] = cts[data.room] && (cts[data.room].length !== 0 ? [...cts[data.room], data] : [data]);
+  //   setChats(cts);
+  // });
 
   return (
     <Box style={{ alignItems: "center", width: "100%" }}>

@@ -1,4 +1,4 @@
-import { Button, Card, CardHeader, Grid, makeStyles, Typography } from "@material-ui/core";
+import { Card, CardHeader, Grid, makeStyles, Typography } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
 import { MoonLoader } from "react-spinners";
 import { ThemeContext } from "../../Context/ThemeContext";
@@ -78,6 +78,7 @@ function TopBlogsCard() {
             <Grid item>
               <a
                 href={blog.url}
+                // eslint-disable-next-line react/jsx-no-target-blank
                 target="_blank"
                 className={
                   defaultTheme === "dark" ? classes.darkLink : classes.link

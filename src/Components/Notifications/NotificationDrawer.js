@@ -1,9 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Popover from "@material-ui/core/Popover";
 import Typography from "@material-ui/core/Typography";
-import MuiDialogContent from "@material-ui/core/DialogContent";
-import { Box, Divider, Grid, IconButton, Tooltip, withStyles } from "@material-ui/core";
+import { Box, Divider, Grid, IconButton, Tooltip } from "@material-ui/core";
 import { ThemeContext } from "../../Context/ThemeContext";
 import user from "../../assets/user.png";
 import NotifCard from "./NotifCard";

@@ -10,8 +10,6 @@ import {
 // import { useHistory } from "react-router-dom";
 import { kBaseUrl } from "../../constants";
 import { setCookies } from "../../utility";
-import EditProfileDialog from "../ProfilePage/EditProfileDialog";
-import { useSocket } from "../../Context/SocketProvider";
 import { useHistory } from "react-router-dom";
 
 const DarkTextField = withStyles((theme) => ({
@@ -47,7 +45,6 @@ const RegisterForm = ({ setLogin }) => {
   const [error, setError] = useState(false);
   const [verify, setVerify] = useState(false);
   const [updateProfile, setUpdateProfile] = useState(false);
-  const socket = useSocket();
   const [joinBtnDisable, setJoinBtnDisable] = useState(false);
   const [icon1, setIcon1] = useState({ val: "close", color: "red" });
   const [icon2, setIcon2] = useState({ val: "close", color: "red" });
@@ -56,7 +53,6 @@ const RegisterForm = ({ setLogin }) => {
   const [icon5, setIcon5] = useState({ val: "close", color: "red" });
   const matches = useMediaQuery((theme) => theme.breakpoints.up("sm"));
   const history = useHistory();
-  const [open, setOpen] = useState(false);
 
   // const handleClickOpen = () => {
   //   setOpen(!open);
@@ -334,13 +330,13 @@ const RegisterForm = ({ setLogin }) => {
               color="primary"
               variant="contained"
               onClick={joinNowHandler}
-              // form="register-profile"
-              // style={
-              //   matches
-              //     ? { margin: "3%", width: "30%" }
-              //     : { margin: "3%", width: "50%" }
-              // }
-              // disabled={joinBtnDisable}
+            // form="register-profile"
+            // style={
+            //   matches
+            //     ? { margin: "3%", width: "30%" }
+            //     : { margin: "3%", width: "50%" }
+            // }
+            // disabled={joinBtnDisable}
             >
               Join now
             </Button>

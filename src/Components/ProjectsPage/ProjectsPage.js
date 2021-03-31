@@ -47,11 +47,13 @@ function ProjectsPage() {
     // return () => {
     //   setProjects([]);
     // };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [end]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [end]);
 
   const handleScroll = (e) => {

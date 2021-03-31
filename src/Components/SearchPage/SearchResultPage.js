@@ -4,7 +4,7 @@ import QuickAccessCard from "../QuickAccess/QuickAccessCard";
 import { kBaseUrl } from "../../constants";
 import { MoonLoader } from "react-spinners";
 import { ThemeContext } from "../../Context/ThemeContext";
-import { useLocation, useParams } from "react-router";
+import { useLocation } from "react-router";
 import TopBlogsCard from "../HomePage/TopBlogsCard";
 import SearchResults from "./SearchResults";
 
@@ -77,10 +77,9 @@ function SearchResultPage() {
               </Grid>
               {empty ? (
                 <Typography
-                  style={{ textAlign: "center" }}
+                  style={{ textAlign: "center", marginTop: "7%" }}
                   variant="h6"
                   color="textSecondary"
-                  style={{ marginTop: "7%" }}
                 >
                   Please Enter a valid Search String
                 </Typography>
@@ -102,10 +101,9 @@ function SearchResultPage() {
                 />
               ) : (
                 <Typography
-                  style={{ textAlign: "center" }}
+                  style={{ textAlign: "center", marginTop: "7%" }}
                   variant="h6"
                   color="textSecondary"
-                  style={{ marginTop: "7%" }}
                 >
                   No search result found!
                 </Typography>

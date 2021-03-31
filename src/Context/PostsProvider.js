@@ -1,5 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
-import { kBaseUrl } from "../constants";
+import React, { useContext, useState } from "react";
 
 const PostsContext = React.createContext();
 

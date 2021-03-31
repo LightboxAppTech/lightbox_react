@@ -45,6 +45,7 @@ function SuggestedInvites() {
       .then((data) => setSuggestions(data.slice(0, 2)))
       .then(() => setLoading(false))
       .catch((e) => console.log(e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const suggests = suggestions && suggestions.length !== 0 ? suggestions.slice(0, 2) : [];

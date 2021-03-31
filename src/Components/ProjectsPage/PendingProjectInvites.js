@@ -7,15 +7,12 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useContext, useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import { MoonLoader } from "react-spinners";
 import { kBaseUrl } from "../../constants";
 import { useProjectRequests } from "../../Context/ProjectRequestProvider";
 import { ThemeContext } from "../../Context/ThemeContext";
 import { useToast } from "../../Context/ToastProvider";
-import InviteCard from "../ConnectionPage/InviteCard";
 import ProjectInviteCard from "./ProjectInviteCard";
-import { v4 } from "uuid";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -81,6 +78,7 @@ function PendingProjectInvites() {
       })
       .then(() => setloading(false))
       .catch((e) => console.log(e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messageType]);
 
   const handleSeeMore = () => {

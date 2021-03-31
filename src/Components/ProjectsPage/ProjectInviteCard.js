@@ -7,7 +7,7 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import user from "../../assets/user.png";
 import CheckIcon from "@material-ui/icons/Check";
 import CloseIcon from "@material-ui/icons/Close";
@@ -110,10 +110,10 @@ const ProjectInviteCard = ({ data }) => {
           setToast(true);
           setMessage(
             data.fname +
-              " " +
-              data.lname +
-              " joined Project " +
-              data.project_title
+            " " +
+            data.lname +
+            " joined Project " +
+            data.project_title
           );
           setMessageType("info");
         } else {
@@ -151,11 +151,11 @@ const ProjectInviteCard = ({ data }) => {
           setToast(true);
           setMessage(
             "Request of " +
-              data.fname +
-              " " +
-              data.lname +
-              " is Rejected for Project " +
-              data.project_title
+            data.fname +
+            " " +
+            data.lname +
+            " is Rejected for Project " +
+            data.project_title
           );
           setMessageType("info");
         } else {

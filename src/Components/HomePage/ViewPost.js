@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import classNames from "classnames";
@@ -14,7 +14,6 @@ import {
   Divider,
   Box,
   Avatar,
-  Badge,
   Paper,
   InputBase,
   CardContent,
@@ -22,7 +21,7 @@ import {
 import CardHeader from "@material-ui/core/CardHeader/CardHeader";
 import CustomCarousel from "./CustomCarousel";
 import clsx from "clsx";
-import { Publish, Comment, Share, MoreVert, Send } from "@material-ui/icons";
+import { Publish, Comment, Share, Send } from "@material-ui/icons";
 import { kBaseUrl } from "../../constants";
 import { useHistory, useParams } from "react-router-dom";
 import PostData from "./PostData";
@@ -36,34 +35,34 @@ import { MoonLoader } from "react-spinners";
 import { useToast } from "../../Context/ToastProvider";
 import { ThemeContext } from "../../Context/ThemeContext";
 
-const StyledBadge = withStyles((theme) => ({
-  badge: {
-    backgroundColor: "#44b700",
-    color: "#44b700",
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    "&::after": {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      borderRadius: "50%",
-      animation: "$ripple 1.2s infinite ease-in-out",
-      border: "1px solid currentColor",
-      content: '""',
-    },
-  },
-  "@keyframes ripple": {
-    "0%": {
-      transform: "scale(.8)",
-      opacity: 1,
-    },
-    "100%": {
-      transform: "scale(2.4)",
-      opacity: 0,
-    },
-  },
-}))(Badge);
+// const StyledBadge = withStyles((theme) => ({
+//   badge: {
+//     backgroundColor: "#44b700",
+//     color: "#44b700",
+//     boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+//     "&::after": {
+//       position: "absolute",
+//       top: 0,
+//       left: 0,
+//       width: "100%",
+//       height: "100%",
+//       borderRadius: "50%",
+//       animation: "$ripple 1.2s infinite ease-in-out",
+//       border: "1px solid currentColor",
+//       content: '""',
+//     },
+//   },
+//   "@keyframes ripple": {
+//     "0%": {
+//       transform: "scale(.8)",
+//       opacity: 1,
+//     },
+//     "100%": {
+//       transform: "scale(2.4)",
+//       opacity: 0,
+//     },
+//   },
+// }))(Badge);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -252,6 +251,7 @@ export const ViewPost = ({ postdata }) => {
       })
       .then(() => setloading(false))
       .catch((e) => console.log(e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, messageType]);
 
   // const images = [
@@ -304,7 +304,7 @@ export const ViewPost = ({ postdata }) => {
       .catch((e) => console.log(e));
   };
 
-  const { handleChange, handleSubmit, values, errors } = useForm(
+  const { handleChange, handleSubmit, values } = useForm(
     commentHandler,
     validate,
     commentData,
@@ -575,12 +575,6 @@ export const ViewPost = ({ postdata }) => {
       </Card>
     </Grid>
   );
-
-  {
-    /* <Button variant="outlined" color="primary" onClick={handleClickOpen}>
-    Open full-screen dialog
-  </Button> */
-  }
 
   return (
     <Box mt={matches ? 12 : 15} mx={matches ? 10 : 0} className={classes.root}>

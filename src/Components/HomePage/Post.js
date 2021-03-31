@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { makeStyles, withStyles, fade } from "@material-ui/core/styles";
+import React, { useContext } from "react";
+import { makeStyles, fade } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader/CardHeader";
@@ -11,20 +11,16 @@ import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
-import PublishIcon from "@material-ui/icons/Publish";
 import CommentIcon from "@material-ui/icons/Comment";
 import ShareIcon from "@material-ui/icons/Share";
 import SendIcon from "@material-ui/icons/Send";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import user from "../../assets/user.png";
-import Badge from "@material-ui/core/Badge";
 import classNames from "classnames";
 import InputBase from "@material-ui/core/InputBase";
 import Paper from "@material-ui/core/Paper";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
-import ViewPost from "./ViewPost";
 import PostData from "./PostData";
 import { beautifiedDate } from "../../utility";
 import { UserContext } from "../../Context/UserContext";
@@ -32,38 +28,37 @@ import { kBaseUrl } from "../../constants";
 import { useHistory } from "react-router-dom";
 import validate from "../../validate/validateComment";
 import useForm from "../../hooks/useForm";
-import { v4 } from "uuid";
 import Alert from "@material-ui/lab/Alert";
 import PostMenu from "./PostMenu";
 
-const StyledBadge = withStyles((theme) => ({
-  badge: {
-    backgroundColor: "#44b700",
-    color: "#44b700",
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    "&::after": {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      borderRadius: "50%",
-      animation: "$ripple 1.2s infinite ease-in-out",
-      border: "1px solid currentColor",
-      content: '""',
-    },
-  },
-  "@keyframes ripple": {
-    "0%": {
-      transform: "scale(.8)",
-      opacity: 1,
-    },
-    "100%": {
-      transform: "scale(2.4)",
-      opacity: 0,
-    },
-  },
-}))(Badge);
+// const StyledBadge = withStyles((theme) => ({
+//   badge: {
+//     backgroundColor: "#44b700",
+//     color: "#44b700",
+//     boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+//     "&::after": {
+//       position: "absolute",
+//       top: 0,
+//       left: 0,
+//       width: "100%",
+//       height: "100%",
+//       borderRadius: "50%",
+//       animation: "$ripple 1.2s infinite ease-in-out",
+//       border: "1px solid currentColor",
+//       content: '""',
+//     },
+//   },
+//   "@keyframes ripple": {
+//     "0%": {
+//       transform: "scale(.8)",
+//       opacity: 1,
+//     },
+//     "100%": {
+//       transform: "scale(2.4)",
+//       opacity: 0,
+//     },
+//   },
+// }))(Badge);
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -472,7 +467,7 @@ const Post = ({ post }) => {
             className={classes.btnspace}
             onClick={() => {
               navigator.clipboard.writeText(
-                "www.localhost:3001/" + "posts/" + post._id
+                "http://lightboxapp.tech/posts/" + post._id
               );
               setCopy(true);
               setTimeout(() => {
