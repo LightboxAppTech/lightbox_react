@@ -15,11 +15,15 @@ import {
   Typography,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
-import { generalSkillSet, branchList } from "../../constants";
+import { generalSkillSet, branchList, kBaseUrl } from "../../constants";
 import useForm from "../../hooks/useForm";
 import validate from "../../validate/validateEditProfile";
 import { UserContext } from "../../Context/UserContext";
 import { ThemeContext } from "../../Context/ThemeContext";
+// import user from "../../assets/user.png";
+// import { useHistory } from "react-router-dom";
+// import { Socket } from "socket.io-client";
+import { useSocket } from "../../Context/SocketProvider";
 
 const StyledBadge = withStyles((theme) => ({
   badge: {
@@ -160,6 +164,12 @@ const darkSkillStyles = {
       color: "#fafafa",
     },
   }),
+  input: (styles) => {
+    return {
+      ...styles,
+      color: "#B6B6B6",
+    };
+  },
   option: (styles) => {
     const color = chroma("#242526");
     return {
@@ -219,26 +229,32 @@ const DarkTextField = withStyles((theme) => ({
   },
 }))(TextField);
 
-const EditProfileFormValidate = () => {
+const EditProfileFormValidate = ({ handleClose }) => {
   const classes = useStyles();
   const [skillError, setSkillError] = useState();
-
   const { userProfile, setUserProfile } = useContext(UserContext);
-  const [skills, setSkills] = useState([...userProfile.skillset]);
-  const [image, setImage] = useState(null);
-  const [fileData, setFileData] = useState(null);
+  const [skills, setSkills] = useState(
+    userProfile ? [...userProfile.skillset] : []
+  );
+  const [imageChanged, setImageChanged] = useState(false);
+  const [image, setImage] = useState([]);
+  const [dp, setDp] = useState(null);
+  const [setFileData] = useState(null);
   const { defaultTheme } = useContext(ThemeContext);
+  // const history = useHistory();
+  const socket = useSocket();
 
   const data = {
-    fname: userProfile.fname,
-    lname: userProfile.lname,
-    title: userProfile.title,
-    semester: userProfile.semester,
-    branch: userProfile.branch,
+    fname: userProfile ? userProfile.fname : "",
+    lname: userProfile ? userProfile.lname : "",
+    title: userProfile ? userProfile.title : "",
+    semester: userProfile ? userProfile.semester : "",
+    branch: userProfile ? userProfile.branch : "",
   };
 
   var defaultSkills = [];
-  userProfile.skillset &&
+  userProfile &&
+    userProfile.skillset &&
     userProfile.skillset.map((skill) =>
       defaultSkills.push({ label: skill, value: skill })
     );
@@ -259,15 +275,72 @@ const EditProfileFormValidate = () => {
     errorData
   );
 
+  // fname: `${req.body.fname.trim()}`,
+  // lname: `${req.body.lname.trim()}`,
+  // branch: `${req.body.branch}`,
+  // college: req.body.college.trim(),
+  // semester: req.body.semester.trim(),
+  // skillset: req.body.skillset,
+  // title: req.body.title.trim(),
+
+  // function submitHome(e) {
+  //   var profileData = {
+  //     ...values,
+  //     skillset: skills,
+  //     profile_pic: image,
+  //     college:
+  //       "Vishwakarma Government Engineering College, Chandkheda, Ahmedabad",
+  //     dp_changed: imageChanged,
+  //   };
+  //   console.log(profileData);
+
+  //   fetch(kBaseUrl + "update_profile", {
+  //     credentials: "include",
+  //     method: "POST",
+  //     headers: {
+  //       "content-type": "application/json",
+  //     },
+  //     body: JSON.stringify(profileData),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       setUserProfile(data);
+  //       socket.emit("auth", { uid: data.uid });
+  //       setLogin();
+  //       history.replace("/home");
+  //     })
+  //     .catch((e) => console.log(e));
+  // }
+
   function submit() {
-    var profileData = { ...values, skillset: skills, dp_changed: false };
-    image &&
-      (profileData = {
-        ...profileData,
-        profile_pic: fileData,
-        dp_changed: true,
-      });
-    // setUserProfile({ ...userProfile, profileData });
+    var profileData = {
+      ...values,
+      skillset: skills,
+      profile_pic: image,
+      college:
+        "Vishwakarma Government Engineering College, Chandkheda, Ahmedabad",
+      dp_changed: imageChanged,
+      thumbnail_pic: userProfile ? userProfile.thumbnail_pic : "",
+    };
+    // console.log(profileData);
+
+    fetch(kBaseUrl + "update_profile", {
+      credentials: "include",
+      // mode: "no-cors",
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(profileData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setUserProfile(data);
+        handleClose();
+      })
+      .catch((e) => console.log(e));
+    setUserProfile({ ...userProfile, profileData });
     console.log(profileData);
   }
 
@@ -288,6 +361,7 @@ const EditProfileFormValidate = () => {
 
   const displaySelectedImages = (event) => {
     const file = event.target.files[0];
+    setImage(file);
     let flag = false;
     let sizeExceeded = false;
     let url;
@@ -302,18 +376,27 @@ const EditProfileFormValidate = () => {
           sizeExceeded = true;
         }
         url = URL.createObjectURL(file);
+        setImageChanged(true);
       } else {
         flag = true;
       }
+      setDp(url);
 
       const formData = new FormData();
       formData.append("post_images", file);
       setFileData(formData);
     }
 
+    var base64image = [];
+    let reader = new FileReader();
+    reader.onload = function (e) {
+      base64image.push({ data: e.target.result, name: file.name });
+    };
+    reader.readAsDataURL(file);
+
     flag && alert("Only Image Files are Supported !");
     sizeExceeded && alert("Please Select image smaller than 8 MB size!");
-    !flag && !sizeExceeded ? setImage(url) : setImage(null);
+    !flag && !sizeExceeded ? setImage(base64image) : setImage([]);
   };
 
   const submitHandler = (e) => {
@@ -358,7 +441,8 @@ const EditProfileFormValidate = () => {
             }}
           >
             <Avatar
-              src={image}
+              // src={dp ? dp : user}
+              src={dp ? dp : userProfile.thumbnail_pic}
               alt="DP"
               aria-label="Name"
               className={classes.avatar}
@@ -540,7 +624,7 @@ const EditProfileFormValidate = () => {
                 }}
                 onChange={handleChange}
                 input={<BootstrapInput />}
-                // style={{ width: "60%" }}
+              // style={{ width: "60%" }}
               >
                 <MenuItem className={classes.menu} value="" disabled>
                   Select Branch

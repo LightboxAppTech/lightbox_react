@@ -16,6 +16,8 @@ import BlockIcon from "@material-ui/icons/Block";
 import { ThemeContext } from "../../Context/ThemeContext";
 import clsx from "clsx";
 import { kBaseUrl } from "../../constants";
+import { useConnections } from "../../Context/ConnectionProvider";
+import { useToast } from "../../Context/ToastProvider";
 
 const useStyles = makeStyles((theme) => ({
   acceptbtn: {
@@ -69,6 +71,15 @@ const InviteCard = ({ suggested, data }) => {
   const classes = useStyles();
   const { defaultTheme } = useContext(ThemeContext);
   const [sent, setSent] = useState(false);
+  const {
+    connections,
+    setConnections,
+    invites,
+    setInvites,
+    suggestions,
+    setSuggestions,
+  } = useConnections();
+  const { setToast, setMessage, setMessageType } = useToast();
 
   const handleAccept = () => {
     if (suggested) {
@@ -82,10 +93,27 @@ const InviteCard = ({ suggested, data }) => {
           uid: data.uid,
         }),
       })
-        .then((res) => res.json())
-        .then((data) => console.log(data.message))
+        .then((res) => {
+          if (res.status === 200) {
+            const sgs = suggestions.filter(
+              (suggestion) => suggestion.uid !== data.uid
+            );
+            setSuggestions(sgs);
+            setToast(true);
+            setMessage("Request Sent to " + data.fname + " " + data.lname);
+            setMessageType("info");
+          } else {
+            setToast(true);
+            setMessage("Something Went Wrong!");
+            setMessageType("error");
+          }
+        })
         .then(setSent(true))
-        .catch((e) => console.log(e));
+        .catch(() => {
+          setToast(true);
+          setMessage("Something Went Wrong!");
+          setMessageType("error");
+        });
     } else {
       fetch(kBaseUrl + "accept_connection", {
         method: "POST",
@@ -97,9 +125,28 @@ const InviteCard = ({ suggested, data }) => {
           uid: data.uid,
         }),
       })
-        .then((res) => res.json())
-        .then((data) => console.log(data.message))
-        .catch((e) => console.log(e));
+        .then((res) => {
+          if (res.status === 200) {
+            console.log(data);
+            setConnections([data, ...connections]);
+            const inv = invites.filter((invite) => invite.uid !== data.uid);
+            setInvites(inv);
+            setToast(true);
+            setMessage(
+              data.fname + " " + data.lname + " is added to your connection"
+            );
+            setMessageType("info");
+          } else {
+            setToast(true);
+            setMessage("Something Went Wrong!");
+            setMessageType("error");
+          }
+        })
+        .catch(() => {
+          setToast(true);
+          setMessage("Something Went Wrong!");
+          setMessageType("error");
+        });
     }
   };
 
@@ -117,9 +164,26 @@ const InviteCard = ({ suggested, data }) => {
           uid: data.uid,
         }),
       })
-        .then((res) => res.json())
-        .then((data) => console.log(data.message))
-        .catch((e) => console.log(e));
+        .then((res) => {
+          if (res.status === 200) {
+            const inv = invites.filter((invite) => invite.uid !== data.uid);
+            setInvites(inv);
+            setToast(true);
+            setMessage(
+              "Request from " + data.fname + " " + data.lname + " is Rejected"
+            );
+            setMessageType("info");
+          } else {
+            setToast(true);
+            setMessage("Something Went Wrong!");
+            setMessageType("error");
+          }
+        })
+        .catch(() => {
+          setToast(true);
+          setMessage("Something Went Wrong!");
+          setMessageType("error");
+        });
     }
   };
 
@@ -128,7 +192,7 @@ const InviteCard = ({ suggested, data }) => {
       <Grid container alignItems="center" justify="space-between">
         <Grid item xs={3}>
           <Avatar
-            src={user}
+            src={data.thumbnail_pic !== "" ? data.thumbnail_pic : user}
             alt="N"
             aria-label="Name"
             className={classes.avatar}
@@ -156,7 +220,7 @@ const InviteCard = ({ suggested, data }) => {
               {data.title}
             </Typography>
             <Typography variant="body2" style={{ fontSize: "0.7rem" }}>
-              {data.branch + " Semester " + data.semester}
+              {data.branch + " Sem " + data.semester}
             </Typography>
           </Grid>
         </Grid>

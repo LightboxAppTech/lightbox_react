@@ -12,6 +12,7 @@ import InviteCard from "./InviteCard";
 import { kBaseUrl } from "../../constants";
 import { MoonLoader } from "react-spinners";
 import { ThemeContext } from "../../Context/ThemeContext";
+import { useConnections } from "../../Context/ConnectionProvider";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -31,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
 function SuggestedInvites() {
   const classes = useStyles();
   const history = useHistory();
-  const [suggestions, setSuggestions] = useState([]);
+  const { suggestions, setSuggestions } = useConnections();
   const [loading, setLoading] = useState(true);
   const { defaultTheme } = useContext(ThemeContext);
 
@@ -45,6 +46,8 @@ function SuggestedInvites() {
       .then(() => setLoading(false))
       .catch((e) => console.log(e));
   }, []);
+
+  const suggests = suggestions && suggestions.length !== 0 ? suggestions.slice(0, 2) : [];
 
   const handleSeemore = () => {
     history.push("/suggestedconnections");
@@ -72,8 +75,8 @@ function SuggestedInvites() {
           />
         ) : (
           <>
-            {suggestions.length !== 0 ? (
-              suggestions.map((suggestion) => (
+            {suggests && suggests.length !== 0 ? (
+              suggests.map((suggestion) => (
                 <Grid item key={suggestion.uid}>
                   <InviteCard suggested={true} data={suggestion} />
                 </Grid>
@@ -90,7 +93,8 @@ function SuggestedInvites() {
           </>
         )}
       </Grid>
-      {!loading && suggestions.length !== 0 && (
+      {/* {!loading && */}
+      {suggests && suggests.length !== 0 && (
         <Grid container justify="flex-end">
           <Button color="primary" onClick={handleSeemore}>
             See more...

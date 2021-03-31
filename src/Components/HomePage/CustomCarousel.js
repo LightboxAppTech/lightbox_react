@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       paddingLeft: 30,
       paddingRight: 30,
-      marginTop: 10,
+      marginTop: 3,
       marginBottom: 5,
     },
     // height: "90vh",
@@ -46,7 +46,7 @@ const CustomCarousel = (props) => {
       {props.images.map((image, index) => (
         <img
           key={index}
-          style={{ maxHeight: "calc(100vh - 64px)" }}
+          style={{ maxHeight: "calc(100vh - 100px)" }}
           className={classes.img}
           src={image}
           alt=""

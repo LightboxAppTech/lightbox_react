@@ -9,28 +9,12 @@ import SideMenus from "../ConnectionPage/SideMenus";
 import { kBaseUrl } from "../../constants";
 import { MoonLoader } from "react-spinners";
 import { ThemeContext } from "../../Context/ThemeContext";
+import { useConnections } from "../../Context/ConnectionProvider";
 
 function SuggestedConnectionPage() {
-  const handleSearch = (search) => {
-    const searchresult = suggestions.filter((suggestion) => {
-      const str =
-        suggestion.fname +
-        " " +
-        suggestion.lname +
-        " " +
-        suggestion.title +
-        " " +
-        suggestion.branch +
-        " semester " +
-        suggestion.semester;
-      return str.toLowerCase().includes(search.toLowerCase());
-    });
-    searchresult !== "" ? setResult(searchresult) : setResult(suggestions);
-  };
-
   const [loading, setloading] = useState(true);
-  const [suggestions, setSuggestions] = useState([]);
-  const [result, setResult] = useState([]);
+  const { suggestions, setSuggestions } = useConnections();
+  const [result, setResult] = useState(suggestions);
   const { defaultTheme } = useContext(ThemeContext);
   const matches = useMediaQuery((theme) => theme.breakpoints.up("sm"));
 
@@ -48,6 +32,23 @@ function SuggestedConnectionPage() {
       .catch((e) => console.log(e));
   }, []);
 
+  const handleSearch = (search) => {
+    const searchresult = suggestions.filter((suggestion) => {
+      const str =
+        suggestion.fname +
+        " " +
+        suggestion.lname +
+        " " +
+        suggestion.title +
+        " " +
+        suggestion.branch +
+        " semester " +
+        suggestion.semester;
+      return str.toLowerCase().includes(search.toLowerCase());
+    });
+    searchresult !== "" ? setResult(searchresult) : setResult(suggestions);
+  };
+
   return (
     <Box my={matches ? 10 : 15} mx={3}>
       <Grid container direction="row" justify="space-between">
@@ -62,7 +63,7 @@ function SuggestedConnectionPage() {
               <PageHeading
                 title="Suggestions"
                 countTitle="Total Suggestions"
-                count={result.length}
+                count={result && result.length}
                 icon={
                   <GroupIcon style={{ fontSize: "300%", color: "#5F5F5F" }} />
                 }

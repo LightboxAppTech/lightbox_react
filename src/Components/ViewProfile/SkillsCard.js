@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
       fontSize: "0.9rem",
     },
   },
+  divider: {
+    backgroundColor: "#5F5F5F",
+  },
 }));
 
 function SkillsCard({ self, data }) {
@@ -73,7 +76,7 @@ function SkillsCard({ self, data }) {
             )}
           </Grid>
         </Grid>
-        <Divider />
+        <Divider className={classes.divider} />
         <Grid item>
           <Grid
             container
@@ -81,11 +84,12 @@ function SkillsCard({ self, data }) {
             justify="flex-start"
             style={{ margin: "5px 10px" }}
           >
-            {data.skillset.map((skill, index) => (
-              <Grid key={index} item md={4} xs={6}>
-                <Typography className={classes.skill}>{skill}</Typography>
-              </Grid>
-            ))}
+            {data.skillset &&
+              data.skillset.map((skill, index) => (
+                <Grid key={index} item md={4} xs={6}>
+                  <Typography className={classes.skill}>{skill}</Typography>
+                </Grid>
+              ))}
           </Grid>
         </Grid>
       </Grid>

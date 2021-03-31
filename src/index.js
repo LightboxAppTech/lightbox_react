@@ -5,12 +5,40 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import UserContextProvider from "./Context/UserContextProvider";
 import ThemeContextProvider from "./Context/ThemeContextProvider";
+import { SocketProvider } from "./Context/SocketProvider";
+import { ConnectionProvider } from "./Context/ConnectionProvider";
+import { NotificationProvider } from "./Context/NotificationProvider";
+import { ProjectRequestProvider } from "./Context/ProjectRequestProvider";
+import { ProjectsProvider } from "./Context/ProjectsProvider";
+import { PostsProvider } from "./Context/PostsProvider";
+import { ToastProvider } from "./Context/ToastProvider";
+import { MyProjectsProvider } from "./Context/MyProjectsProvider";
+import { ChatsProvider } from "./Context/ChatsProvider";
+
 ReactDOM.render(
-  <ThemeContextProvider>
-    <UserContextProvider>
-      <App />{" "}
-    </UserContextProvider>
-  </ThemeContextProvider>,
+  <SocketProvider>
+    <PostsProvider>
+      <ToastProvider>
+        <ProjectsProvider>
+          <NotificationProvider>
+            <ProjectRequestProvider>
+              <ConnectionProvider>
+                <ThemeContextProvider>
+                  <UserContextProvider>
+                    <MyProjectsProvider>
+                      <ChatsProvider>
+                        <App />{" "}
+                      </ChatsProvider>
+                    </MyProjectsProvider>
+                  </UserContextProvider>
+                </ThemeContextProvider>
+              </ConnectionProvider>
+            </ProjectRequestProvider>
+          </NotificationProvider>
+        </ProjectsProvider>
+      </ToastProvider>
+    </PostsProvider>
+  </SocketProvider>,
   document.getElementById("root")
 );
 

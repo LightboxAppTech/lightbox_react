@@ -3,26 +3,41 @@ import React from "react";
 import Connection from "./Connection";
 import user from "../../assets/user.png";
 
-const MyConnections = ({ data }) => {
+const MyConnections = ({ data, search }) => {
   const matches = useMediaQuery((theme) => theme.breakpoints.up("sm"));
   return (
-    <Box style={{ alignItems: "center" }}>
+    <Box style={{ alignItems: "center", width: "100%" }}>
       <Grid
         container
         direction="row"
-        justify={matches ? "flex-start" : "center"}
+        alignItems="flex-start"
+        justify={matches ? "space-between" : "center"}
+        alignContent="flex-start"
         spacing={2}
       >
-        {data.length !== 0 ? (
+        {/* <Grid item key={data[0].uid}>
+          <Connection
+            data={data[0]}
+            photo={data[0].thumbnail_pic != "" ? data[0].thumbnail_pic : user}
+            suggested={false}
+            invite={false}
+          />
+        </Grid> */}
+        {data && data.length !== 0 ? (
           data.map((connection) => (
-            <Grid item xs={matches ? 6 : 11} key={connection.uid}>
+            <Grid
+              item
+              xs={matches ? 6 : (search ? 8 : 11)}
+              key={connection.uid}
+            >
               <Connection
-                uid={connection.uid}
-                name={connection.fname + " " + connection.lname}
-                semester={connection.semester}
-                branch={connection.branch}
-                role={connection.title}
-                photo={user}
+                data={connection}
+                photo={
+                  connection.thumbnail_pic !== ""
+                    ? connection.thumbnail_pic
+                    : user
+                }
+                search={search}
                 suggested={false}
                 invite={false}
               />
@@ -38,7 +53,7 @@ const MyConnections = ({ data }) => {
           </Typography>
         )}
       </Grid>
-    </Box>
+    </Box >
   );
 };
 
